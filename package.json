@@ -1,0 +1,40 @@
+{
+  "name": "alanhoff.com",
+  "version": "1.0.0",
+  "description": "Site pessoal do Alan Hoffmeister",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alanhoff/alanhoff.com.git"
+  },
+  "author": "Alan Hoffmeister <alanhoffmeister@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alanhoff/alanhoff.com/issues"
+  },
+  "homepage": "https://alanhoff.com",
+  "private": true,
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-copy": "^0.7.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-remove": "^0.1.0",
+    "grunt-run": "^0.2.4",
+    "hapi": "^7.0.0",
+    "metalsmith": "^1.0.1",
+    "metalsmith-collections": "^0.6.0",
+    "metalsmith-feed": "0.0.5",
+    "metalsmith-markdown": "^0.2.1",
+    "metalsmith-metallic": "^0.2.0",
+    "metalsmith-more": "^0.2.0",
+    "metalsmith-paginate": "^0.3.0",
+    "metalsmith-path": "^0.1.0",
+    "metalsmith-permalinks": "^0.4.0",
+    "metalsmith-slug": "0.0.5",
+    "metalsmith-templates": "^0.6.0",
+    "swig": "^1.4.2"
+  }
+}
