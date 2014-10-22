@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Blog pessoal sobre JavaScript, Node.js, AngularJs, sistemas embarcados e outras cachaças.">
+  <meta name="author" content="Alan Hoffmeister <alanhoffmeister@gmail.com>">
+
+  <title>Alan Hoffmeister</title>
+
+  <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/assets/css/custom.css" rel="stylesheet">
+
+  <!-- Custom Fonts -->
+  <link href="/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/monokai_sublime.min.css" rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body id="page-top" class="index">
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <a href="/" class="navbar-brand">Alan Hoffmeister</a>
+      </div>
+      <ul class="nav-social hidden-xs">
+        <li>
+          <a href="https://www.facebook.com/alan.hoffmeister"><i class="fa fa-fw fa-facebook"></i></a>
+        </li>
+        <li>
+          <a href="https://plus.google.com/+AlanHoffmeister"><i class="fa fa-fw fa-google-plus"></i></a>
+        </li>
+        <li>
+          <a href="https://twitter.com/alan_hoff"><i class="fa fa-fw fa-twitter"></i></a>
+        </li>
+        <li>
+          <a href="https://br.linkedin.com/in/alanhoff"><i class="fa fa-fw fa-linkedin"></i></a>
+        </li>
+        <li>
+          <a href="/rss.xml"><i class="fa fa-fw fa-rss"></i></a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  
+  <header>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="intro-text">
+            <span class="name">Renderizando com dust.js no Express</span>
+            <hr class="star-light">
+            <span class="skills">Criado por Alan Hoffmeister em 2014-10-21 22:00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <section>
+    <div class="container">
+      <p>Uma das coisas mais básicas que um sistema web pode fazer é renderizar uma
+página HTML para ser exibida no navegador do seu usuário. Embora essa seja
+uma tarefa trivial, muitos recém chegados podem ter uma certa dificuldade de
+achar a melhor ferramenta de renderização para o seu projeto.<!--more--> Hoje
+vamos falar sobre uma delas, o <a href="https://linkedin.github.io/dustjs">dust.js</a>, em especial o
+<a href="http://engineering.linkedin.com/frontend/client-side-templating-throwdown-mustache-handlebars-dustjs-and-more">fork criado pela LinkedIn</a>.</p>
+<h3 id="um-pouco-sobre-o-dust-js">Um pouco sobre o dust.js</h3>
+<p>O dust.js foi desenvolvido originalmente por <a href="https://github.com/akdubya">Aleksander Williams</a>, este
+módulo se destaca dos <a href="http://node-modules.com/search?q=template">demais templates engines</a> por ser assíncrono por
+natureza e stream do template para o cliente enquanto ainda está sendo gerado.
+Por exemplo, com esse helper abaixo, consigo demonstrar a natureza assíncrona
+deste template engine.</p>
+<pre><code class="js">dust.makeBase({
+    asyncHello : <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(chunk)</span></span>{
+        <span class="hljs-comment">// Informamos que o processo é assíncrono</span>
+        chunk.map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(chunk)</span></span>{
+
+            <span class="hljs-comment">// Depois de um segundo escrevemos uma frase</span>
+            <span class="hljs-comment">// no chunk que recebemos</span>
+            setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
+                chunk.write(<span class="hljs-string">'Hello async world!'</span>);
+
+                <span class="hljs-comment">// Precisamos informar que terminamos</span>
+                <span class="hljs-comment">// nossas operações assíncronas e o dust.js</span>
+                <span class="hljs-comment">// pode seguir seu trabalho</span>
+                chunk.end();
+            }, <span class="hljs-number">1000</span>);
+        });
+    }
+});</code></pre>
+
+<p>Com nosso helper registrado so é necessário chamá-lo no seu template:</p>
+<pre><code class="html"><span class="hljs-tag">&lt;<span class="hljs-title">h1</span>&gt;</span>{asyncHello}<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- Será renderizado para --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">h1</span>&gt;</span>Hello async world!<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span></code></pre>
+
+<p>Com isso podemos deixar o carregamento de dados dinâmico, sem precisar carregar
+todos os dados na rota antes de chamar a renderização, assim podemos ter
+templates dinâmicos que não dependem da rota para carregar determinada
+informação. Quem já trabalha com server side templates no Node.js sabe muito
+bem o problema que muitas vezes isso pode causar.</p>
+<h3 id="express-e-adaro">Express e Adaro</h3>
+<p>Esse post terá o <a href="http://expressjs.com">Express</a> como gerenciador de rotas da nossa aplicação e o
+pacote <a href="https://github.com/krakenjs/adaro">Adaro</a> que ajudará a plugar o Dust.js no Express. O pacote
+<a href="https://github.com/mikeal/request">request</a> servirá como uma ajuda na hora de construir o helper <code>gists</code>,
+responsável por listar gists de um determinado usuário.</p>
+<p>Começaremos criando um diretório e instalando os pacotes necessários:</p>
+<pre><code class="bash">mkdir teste-dust
+<span class="hljs-built_in">cd</span> teste-dust
+mkdir template
+npm init
+<span class="hljs-comment"># Respoder as perguntas</span>
+npm install --save express adaro dustjs-helpers dustjs-linkedin request</code></pre>
+
+<p>Com a nossa pasta pronta, já podemos começar o código:</p>
+<pre><code class="javascript"><span class="hljs-comment">// Começamos com o require dos pacotes importantes</span>
+<span class="hljs-comment">// para o projeto</span>
+<span class="hljs-keyword">var</span> request = <span class="hljs-built_in">require</span>(<span class="hljs-string">'request'</span>);
+<span class="hljs-keyword">var</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>);
+<span class="hljs-keyword">var</span> app = express();
+<span class="hljs-keyword">var</span> dustjs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'adaro'</span>);
+
+<span class="hljs-comment">// Setando opções padrões para o request</span>
+<span class="hljs-keyword">var</span> r = request.defaults({
+    headers: {
+        <span class="hljs-string">'User-Agent'</span>: <span class="hljs-string">'Node.js'</span>
+    }
+});
+
+<span class="hljs-comment">// Usando a api do Express, cadastramos uma nova engine</span>
+<span class="hljs-comment">// e desabilitamos o cache pois estamos em modo de desenvolvimento</span>
+app.engine(<span class="hljs-string">'dust'</span>, dustjs.dust({
+    cache: <span class="hljs-literal">false</span>
+}));
+
+<span class="hljs-comment">// Setamos algumas variáveis, como a engine responsável</span>
+<span class="hljs-comment">// por renderizar, desabilitamos o cache do Express e</span>
+<span class="hljs-comment">// setamos o diretório onde estão guardadas nossas views</span>
+app.set(<span class="hljs-string">'view engine'</span>, <span class="hljs-string">'dust'</span>);
+app.set(<span class="hljs-string">'view cache'</span>, <span class="hljs-string">'false'</span>);
+app.set(<span class="hljs-string">'views'</span>, __dirname + <span class="hljs-string">'/template'</span>);
+
+<span class="hljs-comment">// Setamos a nossa primeira rota, onde renderizamos</span>
+<span class="hljs-comment">// o index.dust e passamos algumas variáveis para o template</span>
+app.get(<span class="hljs-string">'/'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span></span>{
+    res.render(<span class="hljs-string">'index'</span>, {
+        pessoas: [
+            {nome: <span class="hljs-string">'Alan'</span>, sobrenome: <span class="hljs-string">'Hoffmeister'</span>},
+            {nome: <span class="hljs-string">'John'</span>, sobrenome: <span class="hljs-string">'Levitt'</span>},
+            {nome: <span class="hljs-string">'Lorem'</span>, sobrenome: <span class="hljs-string">'Ipsum'</span>}
+        ],
+        gists: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(chunk, context, bodies, params)</span></span>{
+
+            <span class="hljs-comment">// Estamos dizendo que esse chunk, ou parte do</span>
+            <span class="hljs-comment">// template que está usando o #gists, é assíncrono</span>
+            <span class="hljs-keyword">return</span> chunk.map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(chunk)</span></span>{
+                <span class="hljs-keyword">var</span> url = <span class="hljs-string">'https://api.github.com/users/'</span> +
+                    params.user + <span class="hljs-string">'/gists'</span>;
+
+                <span class="hljs-comment">// Vamos buscar na API do GitHub os últimos</span>
+                <span class="hljs-comment">// gists do usuário que foi configurado no</span>
+                <span class="hljs-comment">// tag do template</span>
+                r.get(url, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, headers, body)</span></span>{
+                    <span class="hljs-keyword">var</span> json = <span class="hljs-built_in">JSON</span>.parse(body);
+
+                    <span class="hljs-comment">// Para cada gist encontrado, temos que renderizar</span>
+                    <span class="hljs-comment">// o bloco, enviarmos o gist como o contexto do bloco,</span>
+                    <span class="hljs-comment">// assim poder usar o json do gist como marcação no</span>
+                    <span class="hljs-comment">// template</span>
+                    json.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(repo)</span></span>{
+                        chunk.render(bodies.block, context.push(repo));
+                    });
+
+                    chunk.end();
+                });
+            });
+        }
+    });
+});
+
+<span class="hljs-comment">// Uma segunda rota onde vamos renderizar a nossa pseudo página</span>
+<span class="hljs-comment">// de contato</span>
+app.get(<span class="hljs-string">'/contato'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span></span>{
+    res.render(<span class="hljs-string">'contato'</span>);
+});
+
+<span class="hljs-comment">// Essa rota será acionada sempre que o Express detectar uma</span>
+<span class="hljs-comment">// requisição que está pedidindo por uma rota não cadastrada,</span>
+<span class="hljs-comment">// nessa caso específico usaremos para detectar páginas que não</span>
+<span class="hljs-comment">// existem.</span>
+app.all(<span class="hljs-string">'*'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span></span>{
+    res.status(<span class="hljs-number">404</span>).render(<span class="hljs-string">'404'</span>);
+});
+
+<span class="hljs-comment">// Iniciamos o Express na porta 8080</span>
+app.listen(<span class="hljs-number">8080</span>);</code></pre>
+
+<h3 id="templates">Templates</h3>
+<p>Os templates estão disponíveis <a href="https://github.com/alanhoff/alanhoff.com-dust">neste repositório</a> dentro da pasta
+<code>template</code>, tudo o que você precisa fazer é copiar os arquivos para a pasta que
+criamos anteriormente. Não vou postar aqui pois o intuito desta postagem não é
+demonstrar o markup do Dust.js mas sim suas facilidades e integração.</p>
+<h3 id="conclus-o">Conclusão</h3>
+<p>Escrever um helper para o Dust.js pode não ser a coisa mais fácil do mundo,
+pois a natureza da própria plataforma Node.js anceia por métodos assíncronos, e
+são esses métodos que tornam essa template engine extremamente performática e
+modular, perfeita para o seu próximo projeto em Node.js.</p>
+
+    </div>
+  </section>
+  <section class="success">
+    <div class="container">
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+          /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+          var disqus_shortname = 'alanhoffmeister'; // required: replace example with your forum shortname
+
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+              var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+              dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+              (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+      </script>
+    </div>
+  </section>
+
+
+  <!-- Footer -->
+  <footer class="text-center">
+    <div class="footer-below">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            Licença ISC - Alan Hoffmeister 2014
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
+  <div class="scroll-top page-scroll visible-xs visble-sm">
+    <a class="btn btn-primary" href="#page-top">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+
+  <script src="/assets/js/jquery-1.11.0.js"></script>
+  <script src="/assets/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+  <script src="/assets/js/classie.js"></script>
+  <script src="/assets/js/cbpAnimatedHeader.min.js"></script>
+  <script src="/assets/js/jqBootstrapValidation.js"></script>
+  <script src="/assets/js/freelancer.js"></script>
+
+</body>
+
+</html>
