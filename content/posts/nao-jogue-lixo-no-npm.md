@@ -44,7 +44,7 @@ também é muito útil quando precisamos consular rapidamente algo utilizando o
 * __`license`__ é sempre necessário se você quiser deixar seu pacote dentro das
 normas da sua licença.
 
-### O .npmignore savando você
+### O .npmignore salvando você
 
 A primeira opção é utilizar o `.gitignore`, tudo o que está ali dentro o npm irá
 ignorar na hora de publicar, mas também vai dar trabalho na hora do `git push`
