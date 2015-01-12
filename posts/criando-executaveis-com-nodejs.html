@@ -9,7 +9,7 @@
   <meta name="description" content="Blog pessoal sobre JavaScript, Node.js, AngularJs, sistemas embarcados e outras cachaças.">
   <meta name="author" content="Alan Hoffmeister <alanhoffmeister@gmail.com>">
 
-  <title>Alan Hoffmeister</title>
+  <title>Alan Hoffmeister - Criando executáveis com Node.js</title>
 
   <link rel="alternate" type="application/rss+xml" title="RSS" href="https://alanhoff.com/rss.xml">
 
@@ -32,7 +32,8 @@
     <![endif]-->
 
   
-  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/monokai_sublime.min.css">
+
 
 </head>
 
@@ -59,71 +60,90 @@
         </header> <!-- /header -->
 
         
+
   
+  <img src="/assets/img/posts/nodejs.jpg" class="img-responsive">
   
   <section class="post">
     <header class="entry-header">
       <img class="entry-avatar" alt="Paul Laros" height="52" width="52" src="//www.gravatar.com/avatar/6350d3781efe9d1a3a88542771ee39d4.jpg?s=52">
-      <h2 class="entry-title"><a href="posts/criando-executaveis-com-nodejs.html">Criando executáveis com Node.js</a></h2>
+      <h1 class="entry-title"><a href="posts/criando-executaveis-com-nodejs.html">Criando executáveis com Node.js</a></h1>
       <p class="entry-meta">
         Postado em 2015-01-12 14:29 | Por <a class="entry-author" href="https://twitter.com/alan_hoff">Alan Hoffmeister</a>
       </p>
     </header>
     <div class="entry-description">
-      <p>
         <p>Quem nunca teve a vontade de criar um executável para distribuir em outras
 máquinas e clientes, usando o Node.js? Hoje vamos falar um pouco sobre como
 criar um arquivo único contendo o seu código junto com o Node.js.
-      </p>
+<!--more--></p>
+<p>Dica simples e rápida para quem deseja criar aquele <code>arquivo.exe</code> ou executar um
+<code>./hello-world</code> no terminar sem precisar instalar o Node.js.</p>
+<p>A distribuição do Node.js já vem pré configurada para ser distribuída juntamente
+com arquivos de terceiros, assim você pode integrar o seu script juntamente com
+o build do Node.js.</p>
+<h3 id="instru-es-para-linux">Instruções para linux</h3>
+<p>O primeiro passo é instalar as dependências e baixar o source code do Node.js
+para que possamos compilá-lo.</p>
+<pre><code class="lang-bash">sudo apt-get install build-essential
+curl -O http://nodejs.org/dist/v0.10.35/node-v0.10.35.tar.gz
+tar -zxvf node-v0.10.35.tar.gz
+cd node-v0.10.35
+</code></pre>
+<p>Feito isso, precisamos criar um arquivo chamado <code>_third_party_main.js</code> e
+adicionar este arquivo ao <code>node.gyp</code>, depois disto é só compilar.</p>
+<pre><code class="lang-bash"># Criamos o arquivo necessário
+echo &#39;console.log(&quot;Hello world!&quot;);&#39; &gt;&gt; lib/_third_party_main.js
+
+# Depois acrescentamos este arquivo nas dependências da build
+sed -i &quot;s/lib\/zlib.js&#39;,/lib\/zlib.js&#39;,\n&#39;lib\/_third_party_main.js&#39;/&quot; node.gyp
+
+# Agora é só compilar o Node.js!
+./configure
+make
+</code></pre>
+<p>Após a compilação seu binário estará localizado na pasta <code>./out/Release</code> e você
+já pode rodar ele.</p>
+<pre><code class="lang-bash">cd ./out/Release
+./node
+</code></pre>
+<p>Agora é só enviar este executável para os seus amigos, o seu programa rodará
+sem precisar instalar o Node.js.</p>
+<h3 id="instru-es-para-windows">Instruções para Windows</h3>
+<p>Se alguém souber o processo de compilação para Windows, por favor
+<a href="https://github.com/alanhoff/alanhoff.com/tree/master/content/posts">forke esta postagem</a> e adicione aqui.</p>
+<h3 id="b-nus-reduzindo-o-tamanho-com-o-upx">Bônus: reduzindo o tamanho com o UPX</h3>
+<p>O <a href="http://upx.sourceforge.net/">UPX</a> é um packer para executáveis, reduzindo o tamanho dos mesmo, podemos
+utilizar ele para reduzir o tamanho do executável gerado.</p>
+<pre><code class="lang-bash">sudo apt-get install upx
+cd ./out/Release
+cp node node_compressed
+upx node_compressed
+</code></pre>
+<p>Podemos ver que o resultado ficou muito bom, nosso executável passou de 12Mb
+para apenas 4Mb, e continua funcionando.</p>
+<pre><code>➜  Release ls -lah
+total 43M
+-rwxrwxr-x  1 alan alan  12M Jan 12 15:31 node*
+-rwxrwxr-x  1 alan alan 4,1M Jan 12 15:36 node_compressed*
+</code></pre>
     </div>
   </section>
-  
-  
-  
-  <section class="post">
-    <header class="entry-header">
-      <img class="entry-avatar" alt="Paul Laros" height="52" width="52" src="//www.gravatar.com/avatar/6350d3781efe9d1a3a88542771ee39d4.jpg?s=52">
-      <h2 class="entry-title"><a href="posts/nao-jogue-lixo-no-npm.html">Não jogue lixo no npm!</a></h2>
-      <p class="entry-meta">
-        Postado em 2014-10-21 23:00 | Por <a class="entry-author" href="https://twitter.com/alan_hoff">Alan Hoffmeister</a>
-      </p>
-    </header>
-    <div class="entry-description">
-      <p>
-        <p>Sim, tudo o que está dentro do seu projeto é empacotado na hora de publicar o
-seu pacote no npm, incluindo seus testes, documentação, imagens, descrição da
-API e possíveis pornografias. Se o npm começar a ficar lento, a culpa é sua!
-      </p>
-    </div>
-  </section>
-  
-  
-  
-  <section class="post">
-    <header class="entry-header">
-      <img class="entry-avatar" alt="Paul Laros" height="52" width="52" src="//www.gravatar.com/avatar/6350d3781efe9d1a3a88542771ee39d4.jpg?s=52">
-      <h2 class="entry-title"><a href="posts/renderizando-dust-js-no-express.html">Renderizando com dust.js no Express</a></h2>
-      <p class="entry-meta">
-        Postado em 2014-10-21 22:00 | Por <a class="entry-author" href="https://twitter.com/alan_hoff">Alan Hoffmeister</a>
-      </p>
-    </header>
-    <div class="entry-description">
-      <p>
-        <p>Uma das coisas mais básicas que um sistema web pode fazer é renderizar uma
-página HTML para ser exibida no navegador do seu usuário. Embora essa seja
-uma tarefa trivial, muitos recém chegados podem ter uma certa dificuldade de
-achar a melhor ferramenta de renderização para o seu projeto.
-      </p>
-    </div>
-  </section>
-  
-  
-  
+
   <div class="comments">
-      
-      
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'alanhoffmeister'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
   </div>
-  
 
 
         <footer class="footer">
@@ -157,7 +177,17 @@ achar a melhor ferramenta de renderização para o seu projeto.
     <script src="/assets/js/jquery-1.11.0.min.js"></script>
     <script src="/assets/js/bootstrap.min.js"></script>
     
-    
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+<script type="text/javascript">
+  $('code').each(function(){
+    var el = $(this);
+    var content = el.text();
+    var lang = el.attr('class') || '';
+    lang = lang.indexOf('lang-') === 0 ? lang.substring(5) : 'html';
+    el.html(hljs.highlight(lang, content).value);
+  });
+</script>
+
 
   </body>
 </html>

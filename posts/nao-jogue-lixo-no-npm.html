@@ -14,8 +14,8 @@
   <link rel="alternate" type="application/rss+xml" title="RSS" href="https://alanhoff.com/rss.xml">
 
   <!-- Fonts -->
-  <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro%3A400%2C400italic%2C700" rel="stylesheet">
-  <link href="http://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
+  <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro%3A400%2C400italic%2C700" rel="stylesheet">
+  <link href="//fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
 
   <!-- Bootstrap core CSS -->
   <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
@@ -32,7 +32,6 @@
     <![endif]-->
 
   
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/monokai_sublime.min.css">
 
 
@@ -67,7 +66,7 @@
   
   <section class="post">
     <header class="entry-header">
-      <img class="entry-avatar" alt="Paul Laros" height="52" width="52" src="http://www.gravatar.com/avatar/6350d3781efe9d1a3a88542771ee39d4.jpg?s=52">
+      <img class="entry-avatar" alt="Paul Laros" height="52" width="52" src="//www.gravatar.com/avatar/6350d3781efe9d1a3a88542771ee39d4.jpg?s=52">
       <h1 class="entry-title"><a href="posts/nao-jogue-lixo-no-npm.html">Não jogue lixo no npm!</a></h1>
       <p class="entry-meta">
         Postado em 2014-10-21 23:00 | Por <a class="entry-author" href="https://twitter.com/alan_hoff">Alan Hoffmeister</a>
@@ -114,15 +113,14 @@ repositório, para solucionar isso você pode utilizar o <code>.npmignore</code>
 funciona exatamente igual ao <code>.gitignore</code> porém ele só é lido pelo npm na hora
 de publicar um módulo. E aqui vai uma colinha pra você não precisar adicionar
 arquivo por aquivo dentro do seu <code>.npmignore</code></p>
-<pre><code class="hljs"># Primeiro ignoramos tudo
+<pre><code># Primeiro ignoramos tudo
 *
 # Agora permitimos somente os arquivos necessários
-<span class="hljs-change">!package.json</span>
-<span class="hljs-change">!readme.md</span>
-<span class="hljs-change">!license</span>
-<span class="hljs-change">!lib/</span></code></pre>
-
-<p>Pronto, após seguir esses simples passos, você já estará capacitado a parar de
+!package.json
+!readme.md
+!license
+!lib/
+</code></pre><p>Pronto, após seguir esses simples passos, você já estará capacitado a parar de
 ferrar com o npm.</p>
 
     </div>
@@ -176,6 +174,15 @@ ferrar com o npm.</p>
     <script src="/assets/js/bootstrap.min.js"></script>
     
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+<script type="text/javascript">
+  $('code').each(function(){
+    var el = $(this);
+    var content = el.text();
+    var lang = el.attr('class') || '';
+    lang = lang.indexOf('lang-') === 0 ? lang.substring(5) : 'html';
+    el.html(hljs.highlight(lang, content).value);
+  });
+</script>
 
 
   </body>

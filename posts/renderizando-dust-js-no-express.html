@@ -14,8 +14,8 @@
   <link rel="alternate" type="application/rss+xml" title="RSS" href="https://alanhoff.com/rss.xml">
 
   <!-- Fonts -->
-  <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro%3A400%2C400italic%2C700" rel="stylesheet">
-  <link href="http://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
+  <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro%3A400%2C400italic%2C700" rel="stylesheet">
+  <link href="//fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
 
   <!-- Bootstrap core CSS -->
   <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
@@ -32,7 +32,6 @@
     <![endif]-->
 
   
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/monokai_sublime.min.css">
 
 
@@ -65,7 +64,7 @@
   
   <section class="post">
     <header class="entry-header">
-      <img class="entry-avatar" alt="Paul Laros" height="52" width="52" src="http://www.gravatar.com/avatar/6350d3781efe9d1a3a88542771ee39d4.jpg?s=52">
+      <img class="entry-avatar" alt="Paul Laros" height="52" width="52" src="//www.gravatar.com/avatar/6350d3781efe9d1a3a88542771ee39d4.jpg?s=52">
       <h1 class="entry-title"><a href="posts/renderizando-dust-js-no-express.html">Renderizando com dust.js no Express</a></h1>
       <p class="entry-meta">
         Postado em 2014-10-21 22:00 | Por <a class="entry-author" href="https://twitter.com/alan_hoff">Alan Hoffmeister</a>
@@ -84,31 +83,31 @@ módulo se destaca dos <a href="http://node-modules.com/search?q=template">demai
 natureza e stream do template para o cliente enquanto ainda está sendo gerado.
 Por exemplo, com esse helper abaixo, consigo demonstrar a natureza assíncrona
 deste template engine.</p>
-<pre><code class="hljs javascript">dust.makeBase({
-    asyncHello : <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(chunk)</span></span>{
-        <span class="hljs-comment">// Informamos que o processo é assíncrono</span>
-        chunk.map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(chunk)</span></span>{
+<pre><code class="lang-javascript">dust.makeBase({
+    asyncHello : function(chunk){
+        // Informamos que o processo é assíncrono
+        chunk.map(function(chunk){
 
-            <span class="hljs-comment">// Depois de um segundo escrevemos uma frase</span>
-            <span class="hljs-comment">// no chunk que recebemos</span>
-            setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
-                chunk.write(<span class="hljs-string">'Hello async world!'</span>);
+            // Depois de um segundo escrevemos uma frase
+            // no chunk que recebemos
+            setTimeout(function(){
+                chunk.write(&#39;Hello async world!&#39;);
 
-                <span class="hljs-comment">// Precisamos informar que terminamos</span>
-                <span class="hljs-comment">// nossas operações assíncronas e o dust.js</span>
-                <span class="hljs-comment">// pode seguir seu trabalho</span>
+                // Precisamos informar que terminamos
+                // nossas operações assíncronas e o dust.js
+                // pode seguir seu trabalho
                 chunk.end();
-            }, <span class="hljs-number">1000</span>);
+            }, 1000);
         });
     }
-});</code></pre>
-
+});
+</code></pre>
 <p>Com nosso helper registrado so é necessário chamá-lo no seu template:</p>
-<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">h1</span>&gt;</span>{asyncHello}<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+<pre><code class="lang-html">&lt;h1&gt;{asyncHello}&lt;/h1&gt;
 
-<span class="hljs-comment">&lt;!-- Será renderizado para --&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">h1</span>&gt;</span>Hello async world!<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span></code></pre>
-
+&lt;!-- Será renderizado para --&gt;
+&lt;h1&gt;Hello async world!&lt;/h1&gt;
+</code></pre>
 <p>Com isso podemos deixar o carregamento de dados dinâmico, sem precisar carregar
 todos os dados na rota antes de chamar a renderização, assim podemos ter
 templates dinâmicos que não dependem da rota para carregar determinada
@@ -120,69 +119,69 @@ pacote <a href="https://github.com/krakenjs/adaro">Adaro</a> que ajudará a plug
 <a href="https://github.com/mikeal/request">request</a> servirá como uma ajuda na hora de construir o helper <code>gists</code>,
 responsável por listar gists de um determinado usuário.</p>
 <p>Começaremos criando um diretório e instalando os pacotes necessários:</p>
-<pre><code class="hljs bash">mkdir teste-dust
-<span class="hljs-built_in">cd</span> teste-dust
+<pre><code class="lang-bash">mkdir teste-dust
+cd teste-dust
 mkdir template
 npm init
-<span class="hljs-comment"># Respoder as perguntas</span>
-npm install --save express adaro dustjs-helpers dustjs-linkedin request</code></pre>
-
+# Respoder as perguntas
+npm install --save express adaro dustjs-helpers dustjs-linkedin request
+</code></pre>
 <p>Com a nossa pasta pronta, já podemos começar o código:</p>
-<pre><code class="hljs javascript"><span class="hljs-comment">// Começamos com o require dos pacotes importantes</span>
-<span class="hljs-comment">// para o projeto</span>
-<span class="hljs-keyword">var</span> request = <span class="hljs-built_in">require</span>(<span class="hljs-string">'request'</span>);
-<span class="hljs-keyword">var</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>);
-<span class="hljs-keyword">var</span> app = express();
-<span class="hljs-keyword">var</span> dustjs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'adaro'</span>);
+<pre><code class="lang-javascript">// Começamos com o require dos pacotes importantes
+// para o projeto
+var request = require(&#39;request&#39;);
+var express = require(&#39;express&#39;);
+var app = express();
+var dustjs = require(&#39;adaro&#39;);
 
-<span class="hljs-comment">// Setando opções padrões para o request</span>
-<span class="hljs-keyword">var</span> r = request.defaults({
+// Setando opções padrões para o request
+var r = request.defaults({
     headers: {
-        <span class="hljs-string">'User-Agent'</span>: <span class="hljs-string">'Node.js'</span>
+        &#39;User-Agent&#39;: &#39;Node.js&#39;
     }
 });
 
-<span class="hljs-comment">// Usando a api do Express, cadastramos uma nova engine</span>
-<span class="hljs-comment">// e desabilitamos o cache pois estamos em modo de desenvolvimento</span>
-app.engine(<span class="hljs-string">'dust'</span>, dustjs.dust({
-    cache: <span class="hljs-literal">false</span>
+// Usando a api do Express, cadastramos uma nova engine
+// e desabilitamos o cache pois estamos em modo de desenvolvimento
+app.engine(&#39;dust&#39;, dustjs.dust({
+    cache: false
 }));
 
-<span class="hljs-comment">// Setamos algumas variáveis, como a engine responsável</span>
-<span class="hljs-comment">// por renderizar, desabilitamos o cache do Express e</span>
-<span class="hljs-comment">// setamos o diretório onde estão guardadas nossas views</span>
-app.set(<span class="hljs-string">'view engine'</span>, <span class="hljs-string">'dust'</span>);
-app.set(<span class="hljs-string">'view cache'</span>, <span class="hljs-string">'false'</span>);
-app.set(<span class="hljs-string">'views'</span>, __dirname + <span class="hljs-string">'/template'</span>);
+// Setamos algumas variáveis, como a engine responsável
+// por renderizar, desabilitamos o cache do Express e
+// setamos o diretório onde estão guardadas nossas views
+app.set(&#39;view engine&#39;, &#39;dust&#39;);
+app.set(&#39;view cache&#39;, &#39;false&#39;);
+app.set(&#39;views&#39;, __dirname + &#39;/template&#39;);
 
-<span class="hljs-comment">// Setamos a nossa primeira rota, onde renderizamos</span>
-<span class="hljs-comment">// o index.dust e passamos algumas variáveis para o template</span>
-app.get(<span class="hljs-string">'/'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span></span>{
-    res.render(<span class="hljs-string">'index'</span>, {
+// Setamos a nossa primeira rota, onde renderizamos
+// o index.dust e passamos algumas variáveis para o template
+app.get(&#39;/&#39;, function(req, res){
+    res.render(&#39;index&#39;, {
         pessoas: [
-            {nome: <span class="hljs-string">'Alan'</span>, sobrenome: <span class="hljs-string">'Hoffmeister'</span>},
-            {nome: <span class="hljs-string">'John'</span>, sobrenome: <span class="hljs-string">'Levitt'</span>},
-            {nome: <span class="hljs-string">'Lorem'</span>, sobrenome: <span class="hljs-string">'Ipsum'</span>}
+            {nome: &#39;Alan&#39;, sobrenome: &#39;Hoffmeister&#39;},
+            {nome: &#39;John&#39;, sobrenome: &#39;Levitt&#39;},
+            {nome: &#39;Lorem&#39;, sobrenome: &#39;Ipsum&#39;}
         ],
-        gists: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(chunk, context, bodies, params)</span></span>{
+        gists: function(chunk, context, bodies, params){
 
-            <span class="hljs-comment">// Estamos dizendo que esse chunk, ou parte do</span>
-            <span class="hljs-comment">// template que está usando o #gists, é assíncrono</span>
-            <span class="hljs-keyword">return</span> chunk.map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(chunk)</span></span>{
-                <span class="hljs-keyword">var</span> url = <span class="hljs-string">'https://api.github.com/users/'</span> +
-                    params.user + <span class="hljs-string">'/gists'</span>;
+            // Estamos dizendo que esse chunk, ou parte do
+            // template que está usando o #gists, é assíncrono
+            return chunk.map(function(chunk){
+                var url = &#39;https://api.github.com/users/&#39; +
+                    params.user + &#39;/gists&#39;;
 
-                <span class="hljs-comment">// Vamos buscar na API do GitHub os últimos</span>
-                <span class="hljs-comment">// gists do usuário que foi configurado no</span>
-                <span class="hljs-comment">// tag do template</span>
-                r.get(url, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, headers, body)</span></span>{
-                    <span class="hljs-keyword">var</span> json = <span class="hljs-built_in">JSON</span>.parse(body);
+                // Vamos buscar na API do GitHub os últimos
+                // gists do usuário que foi configurado no
+                // tag do template
+                r.get(url, function(err, headers, body){
+                    var json = JSON.parse(body);
 
-                    <span class="hljs-comment">// Para cada gist encontrado, temos que renderizar</span>
-                    <span class="hljs-comment">// o bloco, enviarmos o gist como o contexto do bloco,</span>
-                    <span class="hljs-comment">// assim poder usar o json do gist como marcação no</span>
-                    <span class="hljs-comment">// template</span>
-                    json.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(repo)</span></span>{
+                    // Para cada gist encontrado, temos que renderizar
+                    // o bloco, enviarmos o gist como o contexto do bloco,
+                    // assim poder usar o json do gist como marcação no
+                    // template
+                    json.forEach(function(repo){
                         chunk.render(bodies.block, context.push(repo));
                     });
 
@@ -193,23 +192,23 @@ app.get(<span class="hljs-string">'/'</span>, <span class="hljs-function"><span 
     });
 });
 
-<span class="hljs-comment">// Uma segunda rota onde vamos renderizar a nossa pseudo página</span>
-<span class="hljs-comment">// de contato</span>
-app.get(<span class="hljs-string">'/contato'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span></span>{
-    res.render(<span class="hljs-string">'contato'</span>);
+// Uma segunda rota onde vamos renderizar a nossa pseudo página
+// de contato
+app.get(&#39;/contato&#39;, function(req, res){
+    res.render(&#39;contato&#39;);
 });
 
-<span class="hljs-comment">// Essa rota será acionada sempre que o Express detectar uma</span>
-<span class="hljs-comment">// requisição que está pedidindo por uma rota não cadastrada,</span>
-<span class="hljs-comment">// nessa caso específico usaremos para detectar páginas que não</span>
-<span class="hljs-comment">// existem.</span>
-app.all(<span class="hljs-string">'*'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span></span>{
-    res.status(<span class="hljs-number">404</span>).render(<span class="hljs-string">'404'</span>);
+// Essa rota será acionada sempre que o Express detectar uma
+// requisição que está pedidindo por uma rota não cadastrada,
+// nessa caso específico usaremos para detectar páginas que não
+// existem.
+app.all(&#39;*&#39;, function(req, res){
+    res.status(404).render(&#39;404&#39;);
 });
 
-<span class="hljs-comment">// Iniciamos o Express na porta 8080</span>
-app.listen(<span class="hljs-number">8080</span>);</code></pre>
-
+// Iniciamos o Express na porta 8080
+app.listen(8080);
+</code></pre>
 <h3 id="templates">Templates</h3>
 <p>Os templates estão disponíveis <a href="https://github.com/alanhoff/alanhoff.com-dust">neste repositório</a> dentro da pasta
 <code>template</code>, tudo o que você precisa fazer é copiar os arquivos para a pasta que
@@ -272,6 +271,15 @@ modular, perfeita para o seu próximo projeto em Node.js.</p>
     <script src="/assets/js/bootstrap.min.js"></script>
     
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+<script type="text/javascript">
+  $('code').each(function(){
+    var el = $(this);
+    var content = el.text();
+    var lang = el.attr('class') || '';
+    lang = lang.indexOf('lang-') === 0 ? lang.substring(5) : 'html';
+    el.html(hljs.highlight(lang, content).value);
+  });
+</script>
 
 
   </body>
