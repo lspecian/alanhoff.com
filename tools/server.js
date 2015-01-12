@@ -1,8 +1,17 @@
 var Hapi = require('hapi');
-var server = new Hapi.Server(8080, {
-  files: {
-    relativeTo: __dirname + '/../'
+var server = new Hapi.Server({
+  connections: {
+    routes: {
+      files: {
+        relativeTo: __dirname + '/../'
+      }
+    }
   }
+});
+
+server.connection({
+  host: 'localhost',
+  port: 8080
 });
 
 // Rota do index.html
@@ -37,8 +46,8 @@ server.route({
   }
 });
 
-server.start(function(err){
-  if(err)
+server.start(function(err) {
+  if (err)
     throw err;
 
   console.log('Servidor iniciado em http://localhost:8080');

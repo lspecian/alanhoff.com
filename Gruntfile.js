@@ -32,6 +32,12 @@ module.exports = function(grunt) {
           livereload: true,
         },
       },
+    },
+    'gh-pages': {
+      options: {
+        base: 'build'
+      },
+      src: '**/*'
     }
   });
 
@@ -39,7 +45,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-remove');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-gh-pages');
 
   grunt.registerTask('build', ['remove', 'run:metalsmith', 'copy']);
   grunt.registerTask('server', 'run:server');
+  grunt.registerTask('publish', 'gh-pages');
 };

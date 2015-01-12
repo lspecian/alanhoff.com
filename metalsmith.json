@@ -15,10 +15,6 @@
         "reverse": true
       }
     },
-    "metalsmith-slug": {
-      "renameFiles": true,
-      "patterns": ["posts/*.md"]
-    },
     "metalsmith-metallic": true,
     "metalsmith-markdown": {
       "smartypants": true,

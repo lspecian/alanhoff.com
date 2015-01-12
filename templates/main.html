@@ -1,59 +1,29 @@
 {% extends 'layout.html' %}
 {% block content %}
-  <header>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12">
-          <img class="img-responsive" src="/assets/img/jslogo.png" alt="">
-          <div class="intro-text">
-            <span class="name">JavaScript Witchcraft</span>
-            <hr class="star-light">
-            <span class="skills">Node.js - AngularJS - MongoDB - Cerveja</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
+
   {% for post in collections.posts %}
   {% if loop.index0 <= 4 %}
 
-
-  {% if loop.index0 > 0 %}
-  <section class="success">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 text-center">
-          <hr class="star-light">
-        </div>
-      </div>
+  <section class="post">
+    <header class="entry-header">
+      <img class="entry-avatar" alt="Paul Laros" height="52" width="52" src="//www.gravatar.com/avatar/{{ post.gravatar }}.jpg?s=52">
+      <h2 class="entry-title"><a href="{{ post.path }}">{{ post.title }}</a></h2>
+      <p class="entry-meta">
+        Postado em {{ post.date }} | Por <a class="entry-author" href="{{ post.author_url }}">{{ post.author_name }}</a>
+      </p>
+    </header>
+    <div class="entry-description">
+      <p>
+        {{ post.less.toString() }}
+      </p>
     </div>
   </section>
   {% endif %}
 
-  <section class="success">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 text-center">
-          <h2><a href="{{ post.path }}">{{ post.title }}</a></h2>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-8 col-lg-offset-2">
-          {{ post.less.toString() }} <a href="{{ post.path }}" class="reverse">Ler artigo completo...</a>
-        </div>
-      </div>
-    </div>
-  </section>
-  {% endif %}
   {% endfor %}
-  <section class="success" id="about">
-    <div class="container">
-        <div class="col-lg-8 col-lg-offset-2 text-center">
-          <a href="/posts.html" class="btn btn-outline">
-            <i class="fa fa-angle-right"></i> Leia postagens mais antigas
-          </a>
-        </div>
-      </div>
-    </div>
+  <section class="post">
+    <header class="entry-header">
+      <a href="/posts.html">Postagens antigas</a></h2>
+    </header>
   </section>
 {% endblock %}

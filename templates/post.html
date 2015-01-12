@@ -1,37 +1,46 @@
 {% extends 'layout.html' %}
-{% block content %}
-  <header>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="intro-text">
-            <span class="name">{{ title }}</span>
-            <hr class="star-light">
-            <span class="skills">Criado por {{author}} em {{date}}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
-  <section>
-    <div class="container">
-      {{ contents|safe }}
-    </div>
-  </section>
-  <section class="success">
-    <div class="container">
-      <div id="disqus_thread"></div>
-      <script type="text/javascript">
-          /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-          var disqus_shortname = 'alanhoffmeister'; // required: replace example with your forum shortname
 
-          /* * * DON'T EDIT BELOW THIS LINE * * */
-          (function() {
-              var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-              dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-              (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-          })();
-      </script>
+{% block title %}Alan Hoffmeister - {{ title }}{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/monokai_sublime.min.css">
+{% endblock %}
+
+{% block content %}
+
+  {% if image %}
+  <img src="/assets/img/posts/{{ image }}" class="img-responsive">
+  {% endif %}
+  <section class="post">
+    <header class="entry-header">
+      <img class="entry-avatar" alt="Paul Laros" height="52" width="52" src="//www.gravatar.com/avatar/{{ gravatar }}.jpg?s=52">
+      <h1 class="entry-title"><a href="{{ path }}">{{ title }}</a></h1>
+      <p class="entry-meta">
+        Postado em {{ date }} | Por <a class="entry-author" href="{{ author_url }}">{{ author_name }}</a>
+      </p>
+    </header>
+    <div class="entry-description">
+        {{ contents|safe }}
     </div>
   </section>
+
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'alanhoffmeister'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
 {% endblock %}

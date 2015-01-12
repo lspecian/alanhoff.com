@@ -1,7 +1,9 @@
 ---
 title: Renderizando com dust.js no Express
 date: 2014-10-21 22:00
-author: Alan Hoffmeister
+author_name: Alan Hoffmeister
+author_url: https://twitter.com/alan_hoff
+gravatar: 6350d3781efe9d1a3a88542771ee39d4
 collection: posts
 template: post.html
 ---
@@ -21,7 +23,7 @@ natureza e stream do template para o cliente enquanto ainda está sendo gerado.
 Por exemplo, com esse helper abaixo, consigo demonstrar a natureza assíncrona
 deste template engine.
 
-```js
+```javascript
 dust.makeBase({
     asyncHello : function(chunk){
         // Informamos que o processo é assíncrono

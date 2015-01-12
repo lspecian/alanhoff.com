@@ -1,7 +1,23 @@
-### Meu site pessoal :-)
+# Site pessoal
 
-Para criar o site é só rodar `grunt build` depois de ter clonado e instalado
-todos os módulos necessários.
+Esse repositório serve para fazer a build do site pessoal encontrado na branch
+`gh-pages`.
+
+### Buildar
+
+```bash
+git clone https://github.com/alanhoff/alanhoff.com
+cd alanhoff.com
+npm install
+
+# Altere ou crie uma nova postagem na pasta content/posts
+# depois rode este comando para criar o site em sí
+make build
+
+# Rode este script para visualizar as alterações
+# no servidor local
+make server
+```
 
 ### Licença ISC
 

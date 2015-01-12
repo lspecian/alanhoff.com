@@ -1,7 +1,10 @@
 ---
 title: Não jogue lixo no npm!
 date: 2014-10-21 23:00
-author: Alan Hoffmeister
+author_name: Alan Hoffmeister
+author_url: https://twitter.com/alan_hoff
+gravatar: 6350d3781efe9d1a3a88542771ee39d4
+image: garbage.jpg
 collection: posts
 template: post.html
 ---
