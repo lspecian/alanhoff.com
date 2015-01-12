@@ -9,7 +9,7 @@
   <meta name="description" content="Blog pessoal sobre JavaScript, Node.js, AngularJs, sistemas embarcados e outras cachaças.">
   <meta name="author" content="Alan Hoffmeister <alanhoffmeister@gmail.com>">
 
-  <title>Alan Hoffmeister</title>
+  <title>Alan Hoffmeister - Não jogue lixo no npm!</title>
 
   <link rel="alternate" type="application/rss+xml" title="RSS" href="https://alanhoff.com/rss.xml">
 
@@ -32,7 +32,9 @@
     <![endif]-->
 
   
-  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/monokai_sublime.min.css">
+
 
 </head>
 
@@ -59,52 +61,87 @@
         </header> <!-- /header -->
 
         
+
   
+  <img src="/assets/img/posts/garbage.jpg" class="img-responsive">
   
   <section class="post">
     <header class="entry-header">
       <img class="entry-avatar" alt="Paul Laros" height="52" width="52" src="http://www.gravatar.com/avatar/6350d3781efe9d1a3a88542771ee39d4.jpg?s=52">
-      <h2 class="entry-title"><a href="posts/nao-jogue-lixo-no-npm.html">Não jogue lixo no npm!</a></h2>
+      <h1 class="entry-title"><a href="posts/nao-jogue-lixo-no-npm.html">Não jogue lixo no npm!</a></h1>
       <p class="entry-meta">
         Postado em 2014-10-21 23:00 | Por <a class="entry-author" href="https://twitter.com/alan_hoff">Alan Hoffmeister</a>
       </p>
     </header>
     <div class="entry-description">
-      <p>
         <p>Sim, tudo o que está dentro do seu projeto é empacotado na hora de publicar o
 seu pacote no npm, incluindo seus testes, documentação, imagens, descrição da
 API e possíveis pornografias. Se o npm começar a ficar lento, a culpa é sua!
-      </p>
+<!--more--></p>
+<h3 id="os-arquivos-que-o-npm-n-o-precisa">Os arquivos que o npm NÃO precisa</h3>
+<p>Pense um pouco comigo, toda vez que eu utilizo o <code>require(&#39;seu-modulo-lindo&#39;)</code>
+estou usando a documentação do seu módulo? Estou usando os testes dele? Ou pior
+ainda: estou usando o <strong><em>WEBSITE DO PROJETO</em></strong> (sim uma vez vi um tarball com o
+gh-pages do projeto, e não era meu)? Obviamente você não precisa destes itens.
+Então porque deixar esses arquivos na hora de rodar o <code>npm publish</code>?</p>
+<p>Se eu quero realizar os testes do seu projeto, vou fazer o fork do mesmo,
+instalar as dependências de desenvolvimento e rodar o comando de testes. Eu <strong><em>
+não vou</em></strong> baixar o tarball do npm para fazer isso, muito menos para ler a
+documentação.</p>
+<p>Pode parecer besteira para alguns, mas se enviássemos somente os arquivos
+necessários para um ambiente de produção, a instalação dos nossos projetos
+iria demorar menos, iríamos consumir menos banda, o cache local dos pacotes
+também diminuiria. Dica: fale com o seu chefe sobre redução de gastos.</p>
+<h3 id="os-arquivos-que-o-npm-precisa">Os arquivos que o npm precisa</h3>
+<p>Lembre-se destes três arquivos: <code>package.json</code>, <code>readme.md</code> e <code>license</code>.
+Obviamente você também vai precisar de todos os arquivos necessários para seu
+módulo rodar quando o outro cara fizer o <code>require</code> ou compilar binários na hora
+da instalação.</p>
+<ul>
+<li><strong><code>package.json</code></strong>, acho que não precisa dar explicação, sem isso nem da para
+publicar.</li>
+<li><strong><code>readme.md</code>,</strong> além de servir para formatar a página do seu módulo no npm,
+também é muito útil quando precisamos consular rapidamente algo utilizando o
+<code>npm show modulo-lindo readme</code>.</li>
+<li><strong><code>license</code></strong> é sempre necessário se você quiser deixar seu pacote dentro das
+normas da sua licença.</li>
+</ul>
+<h3 id="o-npmignore-salvando-voc-">O .npmignore salvando você</h3>
+<p>A primeira opção é utilizar o <code>.gitignore</code>, tudo o que está ali dentro o npm irá
+ignorar na hora de publicar, mas também vai dar trabalho na hora do <code>git push</code>
+pois certamente você vai querer mandar a documentação e os testes para o seu
+repositório, para solucionar isso você pode utilizar o <code>.npmignore</code>, que
+funciona exatamente igual ao <code>.gitignore</code> porém ele só é lido pelo npm na hora
+de publicar um módulo. E aqui vai uma colinha pra você não precisar adicionar
+arquivo por aquivo dentro do seu <code>.npmignore</code></p>
+<pre><code class="hljs"># Primeiro ignoramos tudo
+*
+# Agora permitimos somente os arquivos necessários
+<span class="hljs-change">!package.json</span>
+<span class="hljs-change">!readme.md</span>
+<span class="hljs-change">!license</span>
+<span class="hljs-change">!lib/</span></code></pre>
+
+<p>Pronto, após seguir esses simples passos, você já estará capacitado a parar de
+ferrar com o npm.</p>
+
     </div>
   </section>
-  
-  
-  
-  <section class="post">
-    <header class="entry-header">
-      <img class="entry-avatar" alt="Paul Laros" height="52" width="52" src="http://www.gravatar.com/avatar/6350d3781efe9d1a3a88542771ee39d4.jpg?s=52">
-      <h2 class="entry-title"><a href="posts/renderizando-dust-js-no-express.html">Renderizando com dust.js no Express</a></h2>
-      <p class="entry-meta">
-        Postado em 2014-10-21 22:00 | Por <a class="entry-author" href="https://twitter.com/alan_hoff">Alan Hoffmeister</a>
-      </p>
-    </header>
-    <div class="entry-description">
-      <p>
-        <p>Uma das coisas mais básicas que um sistema web pode fazer é renderizar uma
-página HTML para ser exibida no navegador do seu usuário. Embora essa seja
-uma tarefa trivial, muitos recém chegados podem ter uma certa dificuldade de
-achar a melhor ferramenta de renderização para o seu projeto.
-      </p>
-    </div>
-  </section>
-  
-  
-  
+
   <div class="comments">
-      
-      
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'alanhoffmeister'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
   </div>
-  
 
 
         <footer class="footer">
@@ -138,7 +175,8 @@ achar a melhor ferramenta de renderização para o seu projeto.
     <script src="/assets/js/jquery-1.11.0.min.js"></script>
     <script src="/assets/js/bootstrap.min.js"></script>
     
-    
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+
 
   </body>
 </html>
