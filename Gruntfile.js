@@ -49,5 +49,5 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', ['remove', 'run:metalsmith', 'copy']);
   grunt.registerTask('server', 'run:server');
-  grunt.registerTask('publish', 'gh-pages');
+  grunt.registerTask('publish', ['build', 'gh-pages']);
 };

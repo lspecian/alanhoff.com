@@ -239,6 +239,7 @@ a, a:focus, a:hover {
 }
 
 pre {
+    color: white;
     background-color: #23241F;
     overflow: auto;
     word-wrap: normal;
