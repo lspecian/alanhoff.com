@@ -61,8 +61,58 @@ sem precisar instalar o Node.js.
 
 ### Instruções para Windows
 
-Se alguém souber o processo de compilação para Windows, por favor
-[forke esta postagem][0] e adicione aqui.
+Você vai precisar do Microsoft Visual Studio 2012/2010 (pode ser a Express Edition) e 
+do Python 2.6/2.7. O python precisa estar configurado no seu PATH.
+
+Faça o download do código fonte do node.js em http://nodejs.org/dist/v0.10.35/node-v0.10.35.tar.gz e 
+descompacte o arquivo onde preferir, digamos `node-v0.10.35`.
+
+Crie o arquivo `_third_party_main.js` na pasta `lib` dentro de `node-v0.10.35`, edite o arquivo `node.gyp` também em `node-v0.10.35` e adicione logo após 'lib/zlib.js' seu arquivo customizado 'lib/_third_party_main.js'.
+
+Abra um prompt de comando e vá até o diretório `node-v0.10.35` e execute:
+
+`vcbuild.bat nosign release x64` : para compilar para 64-bits
+
+ou
+
+`vcbuild.bat nosign release`     : para compilar para 32-bits
+
+Exemplo compilando para 64-bits:
+
+```
+c:\Dev\node-v0.10.35>vcbuild.bat nosign release x64
+Found ctrpp in WinSDK--will build generated files into tools/msvs/genfiles.
+{ 'target_defaults': { 'cflags': [],
+                       'default_configuration': 'Release',
+                       'defines': [],
+                       'include_dirs': [],
+                       'libraries': []},
+  'variables': { 'clang': 0,
+                 'host_arch': 'ia32',
+                 'node_has_winsdk': 'true',
+                 'node_install_npm': 'true',
+                 'node_prefix': '',
+                 'node_shared_cares': 'false',
+                 'node_shared_http_parser': 'false',
+                 'node_shared_libuv': 'false',
+                 'node_shared_openssl': 'false',
+                 'node_shared_v8': 'false',
+                 'node_shared_zlib': 'false',
+                 'node_tag': '',
+... 
+[alguns minutos]
+                
+
+```
+
+O executavel vai estar na pasta Release no diretório `node-v0.10.35`
+
+```
+c:\Dev\node-v0.10.35>cd Release
+c:\Dev\node-v0.10.35\Release>node
+
+```
+
 
 ### Bônus: reduzindo o tamanho com o UPX
 
